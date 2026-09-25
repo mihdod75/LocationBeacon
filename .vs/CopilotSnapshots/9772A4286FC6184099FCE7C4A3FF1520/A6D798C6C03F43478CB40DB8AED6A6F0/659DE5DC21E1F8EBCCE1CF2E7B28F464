@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="LocationBeacon.MainPage"
+             Title="Location Beacon"
+             BackgroundColor="White">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="15">
+            
+            <Label Text="Location Beacon" FontSize="28" FontAttributes="Bold" HorizontalOptions="Center" TextColor="Black" />
+
+            <!-- Control Button -->
+            <Button x:Name="ToggleBeaconButton" 
+                    Text="Start Beacon" 
+                    Clicked="OnToggleBeaconClicked"
+                    BackgroundColor="#4CAF50"
+                    TextColor="White"
+                    CornerRadius="8"
+                    Padding="10" />
+
+            <!-- Status Section -->
+            <Frame BorderColor="Gray" CornerRadius="10" Padding="15" HasShadow="True">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Status" FontAttributes="Bold" FontSize="16" TextColor="Black" />
+                    <Label x:Name="StatusLabel" Text="Stopped" FontSize="14" TextColor="Black" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Log Section -->
+            <Frame BorderColor="Gray" CornerRadius="10" Padding="15" HasShadow="True">
+                <VerticalStackLayout Spacing="10" HeightRequest="200">
+                    <Label Text="Log" FontAttributes="Bold" FontSize="16" TextColor="Black" />
+                    <ScrollView>
+                        <Label x:Name="LogLabel" 
+                               Text="Log messages will appear here..." 
+                               FontSize="12" 
+                               TextColor="Black" 
+                               Padding="10" />
+                    </ScrollView>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Sending Interval Section -->
+            <Frame BorderColor="Gray" CornerRadius="10" Padding="15" HasShadow="True">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Sending Interval (seconds)" FontAttributes="Bold" FontSize="16" TextColor="Black" />
+                    <Entry x:Name="IntervalEntry" 
+                           Placeholder="60" 
+                           Keyboard="Numeric"
+                           TextColor="Black"
+                           PlaceholderColor="Gray" />
+                    <Label x:Name="IntervalInfoLabel" Text="Minimum: 10 seconds" FontSize="12" TextColor="Black" />
+                    <Button x:Name="SaveIntervalButton" 
+                            Text="Save Interval" 
+                            Clicked="OnSaveIntervalClicked"
+                            BackgroundColor="#2196F3"
+                            TextColor="White"
+                            CornerRadius="8" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Enrollment Section -->
+            <Frame BorderColor="Gray" CornerRadius="10" Padding="15" HasShadow="True">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Enroll Device" FontAttributes="Bold" FontSize="16" TextColor="Black" />
+                    <Label Text="Pairing Word:" FontSize="14" TextColor="Black" />
+                    <Label x:Name="EnrollPairingWordLabel" Text="-" FontSize="20" FontAttributes="Bold" TextColor="Black" />
+                    <Label Text="Enrollment Code:" FontSize="12" TextColor="Gray" />
+                    <Label x:Name="EnrollCodeLabel" Text="-" FontSize="12" TextColor="Gray" />
+                    <Entry x:Name="DeviceLabelEntry" Placeholder="Device label (editable)" TextColor="Black" PlaceholderColor="Gray" />
+                    <HorizontalStackLayout Spacing="10">
+                        <Button x:Name="RequestEnrollButton" Text="Request Enrollment" Clicked="OnRequestEnrollClicked" BackgroundColor="#2196F3" TextColor="White" CornerRadius="8" />
+                        <Button x:Name="GenerateNewEnrollButton" Text="New Code" Clicked="OnGenerateNewEnrollClicked" BackgroundColor="#FF9800" TextColor="White" CornerRadius="8" />
+                    </HorizontalStackLayout>
+                    <Label x:Name="EnrollStatusLabel" Text="Status: none" FontSize="12" TextColor="Black" />
+                </VerticalStackLayout>
+            </Frame>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

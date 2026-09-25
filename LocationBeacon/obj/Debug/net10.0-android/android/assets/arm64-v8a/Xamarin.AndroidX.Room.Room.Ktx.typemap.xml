@@ -1,0 +1,16 @@
+<api type="debug" assembly-name="Xamarin.AndroidX.Room.Room.Ktx" mvid="8328b805c076480191f3fda284726ec9">
+  <java-to-managed>
+    <entry java-name="androidx/room/CoroutinesRoom" managed-name="AndroidX.Room.CoroutinesRoom, Xamarin.AndroidX.Room.Room.Ktx" managed-type-token-id="33554435" />
+    <entry java-name="androidx/room/CoroutinesRoom$Companion" managed-name="AndroidX.Room.CoroutinesRoom+Companion, Xamarin.AndroidX.Room.Room.Ktx" managed-type-token-id="33554440" />
+    <entry java-name="androidx/room/CoroutinesRoomKt" managed-name="AndroidX.Room.CoroutinesRoomKt, Xamarin.AndroidX.Room.Room.Ktx" managed-type-token-id="33554436" />
+    <entry java-name="androidx/room/RoomDatabaseKt" managed-name="AndroidX.Room.RoomDatabaseKt, Xamarin.AndroidX.Room.Room.Ktx" managed-type-token-id="33554437" />
+    <entry java-name="androidx/room/migration/MigrationKt" managed-name="AndroidX.Room.Migration.MigrationKt, Xamarin.AndroidX.Room.Room.Ktx" managed-type-token-id="33554438" />
+  </java-to-managed>
+  <managed-to-java>
+    <entry java-name="androidx/room/CoroutinesRoom" managed-name="AndroidX.Room.CoroutinesRoom, Xamarin.AndroidX.Room.Room.Ktx" managed-type-token-id="33554435" />
+    <entry java-name="androidx/room/CoroutinesRoom$Companion" managed-name="AndroidX.Room.CoroutinesRoom+Companion, Xamarin.AndroidX.Room.Room.Ktx" managed-type-token-id="33554440" />
+    <entry java-name="androidx/room/CoroutinesRoomKt" managed-name="AndroidX.Room.CoroutinesRoomKt, Xamarin.AndroidX.Room.Room.Ktx" managed-type-token-id="33554436" />
+    <entry java-name="androidx/room/RoomDatabaseKt" managed-name="AndroidX.Room.RoomDatabaseKt, Xamarin.AndroidX.Room.Room.Ktx" managed-type-token-id="33554437" />
+    <entry java-name="androidx/room/migration/MigrationKt" managed-name="AndroidX.Room.Migration.MigrationKt, Xamarin.AndroidX.Room.Room.Ktx" managed-type-token-id="33554438" />
+  </managed-to-java>
+</api>

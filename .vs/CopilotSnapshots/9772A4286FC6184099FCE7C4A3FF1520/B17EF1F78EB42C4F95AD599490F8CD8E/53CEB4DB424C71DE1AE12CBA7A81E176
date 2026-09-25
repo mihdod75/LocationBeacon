@@ -1,0 +1,63 @@
+﻿#if __ANDROID__
+using Android.Content;
+using Android.Content.PM;
+using Android.OS;
+
+namespace LocationBeacon.Platforms.Android;
+
+public class PermissionManager
+{
+    public static bool HasRequiredLocationPermissions(Context context)
+    {
+        if (Build.VERSION.SdkInt < BuildVersionCodes.M)
+            return true;
+
+        var fineLocation = context.CheckSelfPermission(Android.Manifest.Permission.AccessFineLocation);
+        var coarseLocation = context.CheckSelfPermission(Android.Manifest.Permission.AccessCoarseLocation);
+        return fineLocation == Permission.Granted && coarseLocation == Permission.Granted;
+    }
+
+    public static bool HasForegroundServiceLocationPermission(Context context)
+    {
+        if (Build.VERSION.SdkInt < BuildVersionCodes.S) // Android 12
+            return true;
+
+        if (Build.VERSION.SdkInt >= BuildVersionCodes.Tiramisu) // Android 13+
+        {
+            var permission = context.CheckSelfPermission(Android.Manifest.Permission.ForegroundServiceLocation);
+            return permission == Permission.Granted;
+        }
+        return true;
+    }
+
+    public static string[] GetRequiredPermissions()
+    {
+        if (Build.VERSION.SdkInt >= BuildVersionCodes.Tiramisu) // Android 13+
+        {
+            return new[]
+            {
+                Android.Manifest.Permission.AccessFineLocation,
+                Android.Manifest.Permission.AccessCoarseLocation,
+                Android.Manifest.Permission.ForegroundServiceLocation
+            };
+        }
+        else if (Build.VERSION.SdkInt >= BuildVersionCodes.S) // Android 12
+        {
+            return new[]
+            {
+                Android.Manifest.Permission.AccessFineLocation,
+                Android.Manifest.Permission.AccessCoarseLocation,
+                Android.Manifest.Permission.ForegroundService
+            };
+        }
+        else
+        {
+            return new[]
+            {
+                Android.Manifest.Permission.AccessFineLocation,
+                Android.Manifest.Permission.AccessCoarseLocation
+            };
+        }
+    }
+}
+#endif

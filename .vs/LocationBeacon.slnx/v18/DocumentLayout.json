@@ -1,0 +1,204 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\work\\LocationBeacon\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\work\\LocationBeacon\\QUICK_REFERENCE.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:QUICK_REFERENCE.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB4734AA-B97E-EB83-B743-02228D3E0CCA}|LocationBeacon\\LocationBeacon.csproj|d:\\work\\locationbeacon\\locationbeacon\\platforms\\android\\permissionmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CB4734AA-B97E-EB83-B743-02228D3E0CCA}|LocationBeacon\\LocationBeacon.csproj|solutionrelative:locationbeacon\\platforms\\android\\permissionmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB4734AA-B97E-EB83-B743-02228D3E0CCA}|LocationBeacon\\LocationBeacon.csproj|d:\\work\\locationbeacon\\locationbeacon\\services\\locationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CB4734AA-B97E-EB83-B743-02228D3E0CCA}|LocationBeacon\\LocationBeacon.csproj|solutionrelative:locationbeacon\\services\\locationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB4734AA-B97E-EB83-B743-02228D3E0CCA}|LocationBeacon\\LocationBeacon.csproj|d:\\work\\locationbeacon\\locationbeacon\\permissionexception.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CB4734AA-B97E-EB83-B743-02228D3E0CCA}|LocationBeacon\\LocationBeacon.csproj|solutionrelative:locationbeacon\\permissionexception.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB4734AA-B97E-EB83-B743-02228D3E0CCA}|LocationBeacon\\LocationBeacon.csproj|d:\\work\\locationbeacon\\locationbeacon\\platforms\\android\\bootreceiver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CB4734AA-B97E-EB83-B743-02228D3E0CCA}|LocationBeacon\\LocationBeacon.csproj|solutionrelative:locationbeacon\\platforms\\android\\bootreceiver.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB4734AA-B97E-EB83-B743-02228D3E0CCA}|LocationBeacon\\LocationBeacon.csproj|d:\\work\\locationbeacon\\locationbeacon\\mainpage_updates.txt||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{CB4734AA-B97E-EB83-B743-02228D3E0CCA}|LocationBeacon\\LocationBeacon.csproj|solutionrelative:locationbeacon\\mainpage_updates.txt||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\work\\LocationBeacon\\COMPLETE_PERMISSION_FIX_GUIDE.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:COMPLETE_PERMISSION_FIX_GUIDE.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\work\\LocationBeacon\\ARCHITECTURE_DESIGN.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:ARCHITECTURE_DESIGN.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB4734AA-B97E-EB83-B743-02228D3E0CCA}|LocationBeacon\\LocationBeacon.csproj|d:\\work\\locationbeacon\\locationbeacon\\mainpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CB4734AA-B97E-EB83-B743-02228D3E0CCA}|LocationBeacon\\LocationBeacon.csproj|solutionrelative:locationbeacon\\mainpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB4734AA-B97E-EB83-B743-02228D3E0CCA}|LocationBeacon\\LocationBeacon.csproj|d:\\work\\locationbeacon\\locationbeacon\\services\\networkdiagnostics.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CB4734AA-B97E-EB83-B743-02228D3E0CCA}|LocationBeacon\\LocationBeacon.csproj|solutionrelative:locationbeacon\\services\\networkdiagnostics.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB4734AA-B97E-EB83-B743-02228D3E0CCA}|LocationBeacon\\LocationBeacon.csproj|d:\\work\\locationbeacon\\locationbeacon\\services\\beaconservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CB4734AA-B97E-EB83-B743-02228D3E0CCA}|LocationBeacon\\LocationBeacon.csproj|solutionrelative:locationbeacon\\services\\beaconservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 4,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{b1e99781-ab81-11d0-b683-00aa00a3ee26}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "BeaconService.cs",
+              "DocumentMoniker": "D:\\work\\LocationBeacon\\LocationBeacon\\Services\\BeaconService.cs",
+              "RelativeDocumentMoniker": "LocationBeacon\\Services\\BeaconService.cs",
+              "ToolTip": "D:\\work\\LocationBeacon\\LocationBeacon\\Services\\BeaconService.cs",
+              "RelativeToolTip": "LocationBeacon\\Services\\BeaconService.cs",
+              "ViewState": "AgIAAHoBAAAAAAAAAABBwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-25T10:27:15.877Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "NetworkDiagnostics.cs",
+              "DocumentMoniker": "D:\\work\\LocationBeacon\\LocationBeacon\\Services\\NetworkDiagnostics.cs",
+              "RelativeDocumentMoniker": "LocationBeacon\\Services\\NetworkDiagnostics.cs",
+              "ToolTip": "D:\\work\\LocationBeacon\\LocationBeacon\\Services\\NetworkDiagnostics.cs",
+              "RelativeToolTip": "LocationBeacon\\Services\\NetworkDiagnostics.cs",
+              "ViewState": "AgIAACIAAAAAAAAAAIBJwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-25T10:09:47.801Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "MainPage.xaml.cs",
+              "DocumentMoniker": "D:\\work\\LocationBeacon\\LocationBeacon\\MainPage.xaml.cs",
+              "RelativeDocumentMoniker": "LocationBeacon\\MainPage.xaml.cs",
+              "ToolTip": "D:\\work\\LocationBeacon\\LocationBeacon\\MainPage.xaml.cs",
+              "RelativeToolTip": "LocationBeacon\\MainPage.xaml.cs",
+              "ViewState": "AgIAANkAAAAAAAAAAIBJwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-25T09:48:27.953Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "QUICK_REFERENCE.md",
+              "DocumentMoniker": "D:\\work\\LocationBeacon\\QUICK_REFERENCE.md",
+              "RelativeDocumentMoniker": "QUICK_REFERENCE.md",
+              "ToolTip": "D:\\work\\LocationBeacon\\QUICK_REFERENCE.md",
+              "RelativeToolTip": "QUICK_REFERENCE.md",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2026-09-16T10:06:19.53Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "ARCHITECTURE_DESIGN.md",
+              "DocumentMoniker": "D:\\work\\LocationBeacon\\ARCHITECTURE_DESIGN.md",
+              "RelativeDocumentMoniker": "ARCHITECTURE_DESIGN.md",
+              "ToolTip": "D:\\work\\LocationBeacon\\ARCHITECTURE_DESIGN.md",
+              "RelativeToolTip": "ARCHITECTURE_DESIGN.md",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAFMBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2026-09-16T10:07:06.561Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "BootReceiver.cs",
+              "DocumentMoniker": "D:\\work\\LocationBeacon\\LocationBeacon\\Platforms\\Android\\BootReceiver.cs",
+              "RelativeDocumentMoniker": "LocationBeacon\\Platforms\\Android\\BootReceiver.cs",
+              "ToolTip": "D:\\work\\LocationBeacon\\LocationBeacon\\Platforms\\Android\\BootReceiver.cs",
+              "RelativeToolTip": "LocationBeacon\\Platforms\\Android\\BootReceiver.cs",
+              "ViewState": "AgIAAC4AAAAAAAAAAIBJwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-16T10:04:03.051Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "MainPage_Updates.txt",
+              "DocumentMoniker": "D:\\work\\LocationBeacon\\LocationBeacon\\MainPage_Updates.txt",
+              "RelativeDocumentMoniker": "LocationBeacon\\MainPage_Updates.txt",
+              "ToolTip": "D:\\work\\LocationBeacon\\LocationBeacon\\MainPage_Updates.txt",
+              "RelativeToolTip": "LocationBeacon\\MainPage_Updates.txt",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAIUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
+              "WhenOpened": "2026-09-16T10:04:45.839Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "COMPLETE_PERMISSION_FIX_GUIDE.md",
+              "DocumentMoniker": "D:\\work\\LocationBeacon\\COMPLETE_PERMISSION_FIX_GUIDE.md",
+              "RelativeDocumentMoniker": "COMPLETE_PERMISSION_FIX_GUIDE.md",
+              "ToolTip": "D:\\work\\LocationBeacon\\COMPLETE_PERMISSION_FIX_GUIDE.md",
+              "RelativeToolTip": "COMPLETE_PERMISSION_FIX_GUIDE.md",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADQBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2026-09-16T10:05:21.889Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "LocationService.cs",
+              "DocumentMoniker": "D:\\work\\LocationBeacon\\LocationBeacon\\Services\\LocationService.cs",
+              "RelativeDocumentMoniker": "LocationBeacon\\Services\\LocationService.cs",
+              "ToolTip": "D:\\work\\LocationBeacon\\LocationBeacon\\Services\\LocationService.cs",
+              "RelativeToolTip": "LocationBeacon\\Services\\LocationService.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAIBQwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-16T09:20:49.421Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "PermissionException.cs",
+              "DocumentMoniker": "D:\\work\\LocationBeacon\\LocationBeacon\\PermissionException.cs",
+              "RelativeDocumentMoniker": "LocationBeacon\\PermissionException.cs",
+              "ToolTip": "D:\\work\\LocationBeacon\\LocationBeacon\\PermissionException.cs",
+              "RelativeToolTip": "LocationBeacon\\PermissionException.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-16T09:34:25.753Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "PermissionManager.cs",
+              "DocumentMoniker": "D:\\work\\LocationBeacon\\LocationBeacon\\Platforms\\Android\\PermissionManager.cs",
+              "RelativeDocumentMoniker": "LocationBeacon\\Platforms\\Android\\PermissionManager.cs",
+              "ToolTip": "D:\\work\\LocationBeacon\\LocationBeacon\\Platforms\\Android\\PermissionManager.cs",
+              "RelativeToolTip": "LocationBeacon\\Platforms\\Android\\PermissionManager.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAEMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-16T09:34:20.147Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

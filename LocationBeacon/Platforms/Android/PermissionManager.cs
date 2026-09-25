@@ -1,0 +1,67 @@
+#if __ANDROID__
+using Android.Content;
+using Android.Content.PM;
+using Android.OS;
+
+namespace LocationBeacon.Platforms.Android;
+
+public class PermissionManager
+{
+    private const string FineLocation = "android.permission.ACCESS_FINE_LOCATION";
+    private const string CoarseLocation = "android.permission.ACCESS_COARSE_LOCATION";
+    private const string ForegroundServiceLocation = "android.permission.FOREGROUND_SERVICE_LOCATION";
+
+    public static bool HasRequiredLocationPermissions(Context context)
+    {
+        if (Build.VERSION.SdkInt < BuildVersionCodes.M)
+            return true;
+
+        var fineLocation = context.CheckSelfPermission(FineLocation);
+        var coarseLocation = context.CheckSelfPermission(CoarseLocation);
+        return fineLocation == Permission.Granted && coarseLocation == Permission.Granted;
+    }
+
+    public static bool HasForegroundServiceLocationPermission(Context context)
+    {
+        if (Build.VERSION.SdkInt < BuildVersionCodes.S) // Android 12
+            return true;
+
+        if (Build.VERSION.SdkInt >= BuildVersionCodes.Tiramisu) // Android 13+
+        {
+            var permission = context.CheckSelfPermission(ForegroundServiceLocation);
+            return permission == Permission.Granted;
+        }
+        return true;
+    }
+
+    public static string[] GetRequiredPermissions()
+    {
+        if (Build.VERSION.SdkInt >= BuildVersionCodes.Tiramisu) // Android 13+
+        {
+            return new[]
+            {
+                FineLocation,
+                CoarseLocation,
+                ForegroundServiceLocation
+            };
+        }
+        else if (Build.VERSION.SdkInt >= BuildVersionCodes.S) // Android 12
+        {
+            return new[]
+            {
+                FineLocation,
+                CoarseLocation,
+                "android.permission.FOREGROUND_SERVICE"
+            };
+        }
+        else
+        {
+            return new[]
+            {
+                FineLocation,
+                CoarseLocation
+            };
+        }
+    }
+}
+#endif

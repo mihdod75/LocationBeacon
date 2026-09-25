@@ -1,0 +1,72 @@
+#if __ANDROID__
+using Android.App;
+using Android.Content;
+using Android.OS;
+using System.Diagnostics;
+using DebugWriter = System.Diagnostics.Debug;
+
+namespace LocationBeacon.Platforms.Android;
+
+/// <summary>
+/// Receives BOOT_COMPLETED broadcast and restarts the beacon foreground service
+/// This ensures beacons resume after device restart
+/// </summary>
+[BroadcastReceiver(Enabled = true, Exported = true)]
+[IntentFilter(new[] { Intent.ActionBootCompleted })]
+public class BootReceiver : BroadcastReceiver
+{
+    public override void OnReceive(Context? context, Intent? intent)
+    {
+        try
+        {
+            if (context == null || intent == null)
+            {
+                DebugWriter.WriteLine("✗ BootReceiver: Context or Intent is null");
+                return;
+            }
+
+            if (intent.Action == Intent.ActionBootCompleted)
+            {
+                DebugWriter.WriteLine("✓ BootReceiver: BOOT_COMPLETED received");
+
+                // CRITICAL: Check permissions before starting foreground service
+                // BroadcastReceiver runs in limited context where permission dialogs cannot be shown
+                // If permissions missing, gracefully skip service start to avoid SecurityException
+                if (!PermissionManager.HasRequiredLocationPermissions(context))
+                {
+                    DebugWriter.WriteLine("✗ BootReceiver: Location permissions not granted - skipping service start");
+                    DebugWriter.WriteLine("  User must launch app and grant permissions to start beacon");
+                    return;
+                }
+
+                if (!PermissionManager.HasForegroundServiceLocationPermission(context))
+                {
+                    DebugWriter.WriteLine("✗ BootReceiver: FOREGROUND_SERVICE_LOCATION permission not granted - skipping service start");
+                    return;
+                }
+
+                DebugWriter.WriteLine("✓ BootReceiver: Required permissions verified");
+
+                var beaconServiceIntent = new Intent(context, typeof(BeaconForegroundService));
+
+                if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
+                {
+                    context.StartForegroundService(beaconServiceIntent);
+                    DebugWriter.WriteLine("✓ BootReceiver: StartForegroundService called (Android 8.0+)");
+                }
+                else
+                {
+                    context.StartService(beaconServiceIntent);
+                    DebugWriter.WriteLine("✓ BootReceiver: StartService called (Pre Android 8.0)");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            DebugWriter.WriteLine($"✗ BootReceiver Error: {ex.Message}");
+            DebugWriter.WriteLine($"Stack trace: {ex.StackTrace}");
+        }
+    }
+}
+
+#endif

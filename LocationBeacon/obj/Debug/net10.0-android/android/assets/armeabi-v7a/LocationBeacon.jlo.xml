@@ -1,0 +1,59 @@
+<api>
+  <jcw-types>
+    <type name="MainActivity" package="crc64dcd422dcea5c613f" application_java_class="android.app.Application" mono_runtime_initialization="mono.MonoPackageManager.LoadApplication (context);" extends_type="crc6488302ad6e9e4df1a.MauiAppCompatActivity" partial_assembly_qualified_name="LocationBeacon.MainActivity, LocationBeacon">
+      <constructors>
+        <constructor name="MainActivity" method="n_.ctor:()V:" jni_signature="()V" managed_parameters="" retval="void" is_dynamically_registered="True" />
+        <constructor name="MainActivity" method="n_.ctor:(I)V:" jni_signature="(I)V" managed_parameters="System.Int32, System.Private.CoreLib" params="int p0" retval="void" is_dynamically_registered="True" super_call="p0" activate_call="p0" />
+      </constructors>
+      <methods>
+        <method name="onCreate" method="n_onCreate:(Landroid/os/Bundle;)V:GetOnCreate_Landroid_os_Bundle_Handler" jni_signature="(Landroid/os/Bundle;)V" params="android.os.Bundle p0" retval="void" is_dynamically_registered="True" super_call="p0" activate_call="p0" />
+      </methods>
+    </type>
+    <type name="MainApplication" package="crc64dcd422dcea5c613f" application_java_class="android.app.Application" mono_runtime_initialization="mono.MonoPackageManager.LoadApplication (context);" extends_type="crc6488302ad6e9e4df1a.MauiApplication" is_application="True" partial_assembly_qualified_name="LocationBeacon.MainApplication, LocationBeacon" application_constructor="MainApplication" />
+    <type name="BeaconWorker" package="crc64f9abaa483bd64c1f" application_java_class="android.app.Application" mono_runtime_initialization="mono.MonoPackageManager.LoadApplication (context);" extends_type="androidx.work.Worker" partial_assembly_qualified_name="LocationBeacon.Services.BeaconWorker, LocationBeacon">
+      <constructors>
+        <constructor name="BeaconWorker" method="n_.ctor:(Landroid/content/Context;Landroidx/work/WorkerParameters;)V:" jni_signature="(Landroid/content/Context;Landroidx/work/WorkerParameters;)V" managed_parameters="Android.Content.Context, Mono.Android:AndroidX.Work.WorkerParameters, Xamarin.AndroidX.Work.Runtime" params="android.content.Context p0, androidx.work.WorkerParameters p1" retval="void" is_dynamically_registered="True" super_call="p0, p1" activate_call="p0, p1" />
+      </constructors>
+      <methods>
+        <method name="doWork" method="n_doWork:()Landroidx/work/ListenableWorker$Result;:GetDoWorkHandler" jni_signature="()Landroidx/work/ListenableWorker$Result;" retval="androidx.work.ListenableWorker.Result" is_dynamically_registered="True" />
+      </methods>
+    </type>
+    <type name="NetworkStateManager_NetworkCallback" package="crc64f9abaa483bd64c1f" application_java_class="android.app.Application" mono_runtime_initialization="mono.MonoPackageManager.LoadApplication (context);" extends_type="android.net.ConnectivityManager.NetworkCallback" partial_assembly_qualified_name="LocationBeacon.Services.NetworkStateManager+NetworkCallback, LocationBeacon">
+      <constructors>
+        <constructor name="NetworkStateManager_NetworkCallback" method="n_.ctor:()V:" jni_signature="()V" managed_parameters="" retval="void" is_dynamically_registered="True" />
+        <constructor name="NetworkStateManager_NetworkCallback" method="n_.ctor:(I)V:" jni_signature="(I)V" managed_parameters="System.Int32, System.Private.CoreLib" params="int p0" retval="void" is_dynamically_registered="True" super_call="p0" activate_call="p0" />
+      </constructors>
+      <methods>
+        <method name="onAvailable" method="n_onAvailable:(Landroid/net/Network;)V:GetOnAvailable_Landroid_net_Network_Handler" jni_signature="(Landroid/net/Network;)V" params="android.net.Network p0" retval="void" is_dynamically_registered="True" super_call="p0" activate_call="p0" />
+        <method name="onLost" method="n_onLost:(Landroid/net/Network;)V:GetOnLost_Landroid_net_Network_Handler" jni_signature="(Landroid/net/Network;)V" params="android.net.Network p0" retval="void" is_dynamically_registered="True" super_call="p0" activate_call="p0" />
+        <method name="onCapabilitiesChanged" method="n_onCapabilitiesChanged:(Landroid/net/Network;Landroid/net/NetworkCapabilities;)V:GetOnCapabilitiesChanged_Landroid_net_Network_Landroid_net_NetworkCapabilities_Handler" jni_signature="(Landroid/net/Network;Landroid/net/NetworkCapabilities;)V" params="android.net.Network p0, android.net.NetworkCapabilities p1" retval="void" is_dynamically_registered="True" super_call="p0, p1" activate_call="p0, p1" />
+      </methods>
+    </type>
+    <type name="BeaconForegroundService" package="crc6423d5b0e3292d0ba4" application_java_class="android.app.Application" mono_runtime_initialization="mono.MonoPackageManager.LoadApplication (context);" extends_type="android.app.Service" partial_assembly_qualified_name="LocationBeacon.Platforms.Android.BeaconForegroundService, LocationBeacon">
+      <constructors>
+        <constructor name="BeaconForegroundService" method="n_.ctor:()V:" jni_signature="()V" managed_parameters="" retval="void" is_dynamically_registered="True" />
+      </constructors>
+      <methods>
+        <method name="onStartCommand" method="n_onStartCommand:(Landroid/content/Intent;II)I:GetOnStartCommand_Landroid_content_Intent_IIHandler" jni_signature="(Landroid/content/Intent;II)I" params="android.content.Intent p0, int p1, int p2" retval="int" is_dynamically_registered="True" super_call="p0, p1, p2" activate_call="p0, p1, p2" />
+        <method name="onDestroy" method="n_onDestroy:()V:GetOnDestroyHandler" jni_signature="()V" retval="void" is_dynamically_registered="True" />
+        <method name="onBind" method="n_onBind:(Landroid/content/Intent;)Landroid/os/IBinder;:GetOnBind_Landroid_content_Intent_Handler" jni_signature="(Landroid/content/Intent;)Landroid/os/IBinder;" params="android.content.Intent p0" retval="android.os.IBinder" is_dynamically_registered="True" super_call="p0" activate_call="p0" />
+      </methods>
+    </type>
+    <type name="BootReceiver" package="crc6423d5b0e3292d0ba4" application_java_class="android.app.Application" mono_runtime_initialization="mono.MonoPackageManager.LoadApplication (context);" extends_type="android.content.BroadcastReceiver" partial_assembly_qualified_name="LocationBeacon.Platforms.Android.BootReceiver, LocationBeacon">
+      <constructors>
+        <constructor name="BootReceiver" method="n_.ctor:()V:" jni_signature="()V" managed_parameters="" retval="void" is_dynamically_registered="True" />
+      </constructors>
+      <methods>
+        <method name="onReceive" method="n_onReceive:(Landroid/content/Context;Landroid/content/Intent;)V:GetOnReceive_Landroid_content_Context_Landroid_content_Intent_Handler" jni_signature="(Landroid/content/Context;Landroid/content/Intent;)V" params="android.content.Context p0, android.content.Intent p1" retval="void" is_dynamically_registered="True" super_call="p0, p1" activate_call="p0, p1" />
+      </methods>
+    </type>
+  </jcw-types>
+  <acw-types partial-assembly-name="LocationBeacon" module-name="LocationBeacon.dll">
+    <type assembly-qualified-name="LocationBeacon.MainActivity, LocationBeacon, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" compat-jni-name="locationbeacon.MainActivity" java-key="crc64dcd422dcea5c613f.MainActivity" managed-key="LocationBeacon.MainActivity" partial-assembly-qualified-name="LocationBeacon.MainActivity, LocationBeacon" />
+    <type assembly-qualified-name="LocationBeacon.MainApplication, LocationBeacon, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" compat-jni-name="locationbeacon.MainApplication" java-key="crc64dcd422dcea5c613f.MainApplication" managed-key="LocationBeacon.MainApplication" partial-assembly-qualified-name="LocationBeacon.MainApplication, LocationBeacon" />
+    <type assembly-qualified-name="LocationBeacon.Services.BeaconWorker, LocationBeacon, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" compat-jni-name="locationbeacon.services.BeaconWorker" java-key="crc64f9abaa483bd64c1f.BeaconWorker" managed-key="LocationBeacon.Services.BeaconWorker" partial-assembly-qualified-name="LocationBeacon.Services.BeaconWorker, LocationBeacon" />
+    <type assembly-qualified-name="LocationBeacon.Services.NetworkStateManager+NetworkCallback, LocationBeacon, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" compat-jni-name="locationbeacon.services.NetworkStateManager_NetworkCallback" java-key="crc64f9abaa483bd64c1f.NetworkStateManager_NetworkCallback" managed-key="LocationBeacon.Services.NetworkStateManager.NetworkCallback" partial-assembly-qualified-name="LocationBeacon.Services.NetworkStateManager+NetworkCallback, LocationBeacon" />
+    <type assembly-qualified-name="LocationBeacon.Platforms.Android.BeaconForegroundService, LocationBeacon, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" compat-jni-name="locationbeacon.platforms.android.BeaconForegroundService" java-key="crc6423d5b0e3292d0ba4.BeaconForegroundService" managed-key="LocationBeacon.Platforms.Android.BeaconForegroundService" partial-assembly-qualified-name="LocationBeacon.Platforms.Android.BeaconForegroundService, LocationBeacon" />
+    <type assembly-qualified-name="LocationBeacon.Platforms.Android.BootReceiver, LocationBeacon, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" compat-jni-name="locationbeacon.platforms.android.BootReceiver" java-key="crc6423d5b0e3292d0ba4.BootReceiver" managed-key="LocationBeacon.Platforms.Android.BootReceiver" partial-assembly-qualified-name="LocationBeacon.Platforms.Android.BootReceiver, LocationBeacon" />
+  </acw-types>
+</api>

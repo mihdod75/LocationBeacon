@@ -1,0 +1,241 @@
+﻿using System;
+using LocationBeacon.Services;
+using Microsoft.Maui.Graphics;
+
+namespace LocationBeacon;
+
+public partial class MainPage : ContentPage
+{
+    private readonly BeaconService _beaconService;
+    private readonly PreferencesService _preferencesService;
+    private readonly EnrollmentService _enrollmentService;
+    private readonly DeviceInfoService _deviceInfoService;
+    private bool _isBeaconRunning;
+
+    public MainPage()
+    {
+        InitializeComponent();
+        _beaconService = new BeaconService();
+        _preferencesService = new PreferencesService();
+        _enrollmentService = new EnrollmentService();
+        _deviceInfoService = new DeviceInfoService();
+        _isBeaconRunning = false;
+
+        // Wire up event handlers
+        _beaconService.StatusChanged += OnStatusChanged;
+        _beaconService.ErrorOccurred += OnErrorOccurred;
+        _enrollmentService.StatusChanged += OnEnrollmentStatusChanged;
+        _enrollmentService.ErrorOccurred += OnEnrollmentError;
+        _enrollmentService.Approved += OnEnrollmentApproved;
+        _enrollmentService.EnrollmentGenerated += OnEnrollmentGenerated;
+
+        // Load saved preferences
+        LoadPreferences();
+    }
+
+    private void LoadPreferences()
+    {
+        IntervalEntry.Text = _preferencesService.GetSendingIntervalSeconds().ToString();
+        EnrollPairingWordLabel.Text = _preferencesService.GetPairingWord();
+        EnrollCodeLabel.Text = _preferencesService.GetEnrollmentCode();
+        DeviceLabelEntry.Text = _preferencesService.GetDeviceLabel();
+        EnrollStatusLabel.Text = $"Status: {_preferencesService.GetEnrollmentStatus()}";
+    }
+
+    private void OnEnrollmentStatusChanged(object? sender, string message)
+    {
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            EnrollStatusLabel.Text = $"Status: {message}";
+            AddLog($"ENROLL: {message}");
+        });
+    }
+
+    private void OnEnrollmentError(object? sender, Exception ex)
+    {
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            AddLog($"ENROLL ERROR: {ex.Message}");
+        });
+    }
+
+    private void OnEnrollmentApproved(object? sender, string secret)
+    {
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            EnrollStatusLabel.Text = "Status: approved";
+            AddLog("Enrollment approved and secret stored");
+        });
+    }
+
+    private void OnEnrollmentGenerated(object? sender, (string Code, string PairingWord) values)
+    {
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            EnrollPairingWordLabel.Text = values.PairingWord;
+            EnrollCodeLabel.Text = values.Code;
+            AddLog($"Generated pairing word: {values.PairingWord}");
+        });
+    }
+
+    private void OnRequestEnrollClicked(object sender, EventArgs e)
+    {
+        // save device label
+        var label = DeviceLabelEntry.Text ?? string.Empty;
+        _preferencesService.SetDeviceLabel(label);
+        _ = _enrollmentService.StartEnrollmentAsync();
+    }
+
+    private void OnGenerateNewEnrollClicked(object sender, EventArgs e)
+    {
+        // clear previous
+        _preferencesService.ClearEnrollment();
+        // generate to update UI
+        var code = Guid.NewGuid().ToString();
+        var pw = _deviceInfoService.GeneratePairingWord();
+        _preferencesService.SetEnrollmentCode(code);
+        _preferencesService.SetPairingWord(pw);
+        EnrollPairingWordLabel.Text = pw;
+        EnrollCodeLabel.Text = code;
+        EnrollStatusLabel.Text = "Status: none";
+        AddLog("Generated new enrollment code");
+    }
+
+    private void OnSaveIntervalClicked(object sender, EventArgs e)
+    {
+        if (int.TryParse(IntervalEntry.Text, out int interval))
+        {
+            _preferencesService.SetSendingIntervalSeconds(interval);
+            IntervalEntry.Text = _preferencesService.GetSendingIntervalSeconds().ToString();
+            DisplayAlert("Success", $"Interval set to {interval} seconds", "OK");
+            AddLog($"Sending interval updated to {interval} seconds");
+
+            // If beacon is running, restart it to apply the new interval
+            if (_isBeaconRunning)
+            {
+                StopBeacon();
+                StartBeacon();
+            }
+        }
+        else
+        {
+            DisplayAlert("Error", "Please enter a valid number", "OK");
+        }
+    }
+
+    private async void OnToggleBeaconClicked(object sender, EventArgs e)
+    {
+        if (_isBeaconRunning)
+        {
+            StopBeacon();
+        }
+        else
+        {
+            await StartBeaconAsync();
+        }
+    }
+
+    private async Task StartBeaconAsync()
+    {
+        var storedKey = _preferencesService.GetPairingKey();
+        if (string.IsNullOrWhiteSpace(storedKey))
+        {
+            await DisplayAlert("Error", "Please complete enrollment to get the pairing key", "OK");
+            return;
+        }
+
+        // Request location permissions before starting beacon
+        AddLog("Requesting location permissions...");
+        var locationStatus = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
+
+        if (locationStatus != PermissionStatus.Granted)
+        {
+            AddLog("Location permission not granted. Requesting from user...");
+            locationStatus = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
+        }
+
+        if (locationStatus != PermissionStatus.Granted)
+        {
+            AddLog("ERROR: Location permission denied by user");
+            await DisplayAlert("Permission Required", 
+                "Location permission is required to start the beacon. Please enable it in app settings.", 
+                "OK");
+            return;
+        }
+
+        AddLog("✓ Location permissions granted");
+
+        _isBeaconRunning = true;
+        ToggleBeaconButton.Text = "Stop Beacon";
+        ToggleBeaconButton.BackgroundColor = Color.Parse("#F44336");
+        AddLog("Starting beacon...");
+
+        // Run StartBeaconAsync in background and don't wait for completion
+        #pragma warning disable CS4014 // Because this call is not awaited, execution continues before the call is completed
+        _beaconService.StartBeaconAsync();
+        #pragma warning restore CS4014 // Because this call is not awaited, execution continues before the call is completed
+    }
+
+    private async void StartBeacon()
+    {
+        await StartBeaconAsync();
+    }
+
+    private void StopBeacon()
+    {
+        _isBeaconRunning = false;
+        ToggleBeaconButton.Text = "Start Beacon";
+        ToggleBeaconButton.BackgroundColor = Color.Parse("#4CAF50");
+        _beaconService.StopBeacon();
+        AddLog("Stopping beacon...");
+    }
+
+    private void OnStatusChanged(object sender, string message)
+    {
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            StatusLabel.Text = message;
+            AddLog(message);
+        });
+    }
+
+    private void OnErrorOccurred(object sender, Exception ex)
+    {
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            AddLog($"ERROR: {ex.Message}");
+
+            // If the error is due to unenrollment (beacon deleted), refresh the enrollment state
+            if (ex.Message.Contains("unenrolled") || ex.Message.Contains("Beacon unknown"))
+            {
+                RefreshEnrollmentState();
+            }
+        });
+    }
+
+    private void RefreshEnrollmentState()
+    {
+        // Check if device is still enrolled
+        var pairingKey = _preferencesService.GetPairingKey();
+
+        // If pairing key is empty, device is unenrolled
+        if (string.IsNullOrEmpty(pairingKey))
+        {
+            _isBeaconRunning = false;
+            ToggleBeaconButton.Text = "Start Beacon";
+            ToggleBeaconButton.BackgroundColor = Color.Parse("#4CAF50");
+            StatusLabel.Text = "Device unenrolled";
+            EnrollStatusLabel.Text = "Status: unenrolled";
+            AddLog("Device has been unenrolled");
+        }
+    }
+
+    private void AddLog(string message)
+    {
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            var timestamp = DateTime.Now.ToString("HH:mm:ss");
+            LogLabel.Text = $"[{timestamp}] {message}\n{LogLabel.Text}";
+        });
+    }
+}

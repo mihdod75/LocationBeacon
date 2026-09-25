@@ -1,0 +1,125 @@
+﻿using System.Diagnostics;
+using Microsoft.Maui.Devices.Sensors;
+
+namespace LocationBeacon.Services;
+
+public class LocationService
+{
+    private Location? _cachedLocation;
+    private DateTime _cachedLocationTime = DateTime.MinValue;
+    private const int CacheValiditySeconds = 30;
+
+    public async Task<(double Latitude, double Longitude, double Accuracy)> GetLocationAsync()
+    {
+        try
+        {
+            // Check if we have a fresh cached location (less than 30 seconds old)
+            if (_cachedLocation != null && (DateTime.UtcNow - _cachedLocationTime).TotalSeconds < CacheValiditySeconds)
+            {
+                Debug.WriteLine($"Using cached location (age: {(DateTime.UtcNow - _cachedLocationTime).TotalSeconds:F1}s)");
+                return (_cachedLocation.Latitude, _cachedLocation.Longitude, _cachedLocation.Accuracy ?? 0);
+            }
+
+            // For background operation, we need LocationAlways permission
+            // Check if we have LocationAlways (background) permission first
+            var backgroundStatus = await Permissions.CheckStatusAsync<Permissions.LocationAlways>();
+            if (backgroundStatus != PermissionStatus.Granted)
+            {
+                backgroundStatus = await Permissions.RequestAsync<Permissions.LocationAlways>();
+                Debug.WriteLine($"Background location permission: {backgroundStatus}");
+
+                if (backgroundStatus != PermissionStatus.Granted)
+                {
+                    // Fallback to LocationWhenInUse if available
+                    var status = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
+                    if (status != PermissionStatus.Granted)
+                    {
+                        status = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
+                    }
+
+                    if (status != PermissionStatus.Granted)
+                    {
+                        Debug.WriteLine("Location permissions denied");
+                        return (0, 0, 0);
+                    }
+                }
+            }
+
+            var stopwatch = Stopwatch.StartNew();
+
+            // Try to get location with increasing timeouts
+            var location = await TryGetLocationWithTimeout(TimeSpan.FromSeconds(5));
+            
+            if (location == null)
+            {
+                Debug.WriteLine("First attempt failed, retrying with longer timeout...");
+                location = await TryGetLocationWithTimeout(TimeSpan.FromSeconds(15));
+            }
+
+            stopwatch.Stop();
+            Debug.WriteLine($"Location acquisition took {stopwatch.Elapsed.TotalSeconds:F2}s");
+
+            if (location != null)
+            {
+                _cachedLocation = location;
+                _cachedLocationTime = DateTime.UtcNow;
+                Debug.WriteLine($"✓ Location obtained: Lat={location.Latitude}, Lon={location.Longitude}, Accuracy={location.Accuracy}m");
+                return (location.Latitude, location.Longitude, location.Accuracy ?? 0);
+            }
+            else
+            {
+                Debug.WriteLine("✗ Location is null after retries");
+                // If we have a cached location (even if stale), return it to avoid missing beacons
+                if (_cachedLocation != null)
+                {
+                    Debug.WriteLine($"Using stale cached location from {(DateTime.UtcNow - _cachedLocationTime).TotalSeconds:F1}s ago");
+                    return (_cachedLocation.Latitude, _cachedLocation.Longitude, _cachedLocation.Accuracy ?? 0);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"✗ Error getting location: {ex.Message}");
+            Debug.WriteLine($"Stack trace: {ex.StackTrace}");
+            
+            // Return cached location if available to prevent missing beacons
+            if (_cachedLocation != null)
+            {
+                Debug.WriteLine($"Exception occurred, using cached location from {(DateTime.UtcNow - _cachedLocationTime).TotalSeconds:F1}s ago");
+                return (_cachedLocation.Latitude, _cachedLocation.Longitude, _cachedLocation.Accuracy ?? 0);
+            }
+        }
+
+        return (0, 0, 0);
+    }
+
+    private async Task<Location?> TryGetLocationWithTimeout(TimeSpan timeout)
+    {
+        try
+        {
+            var request = new GeolocationRequest(
+                accuracy: GeolocationAccuracy.Best,
+                timeout: timeout);
+
+            return await Geolocation.Default.GetLocationAsync(request);
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Location attempt failed: {ex.Message}");
+            return null;
+        }
+    }
+
+    public int GetBatteryLevel()
+    {
+        try
+        {
+            return (int)Math.Round(Battery.Default.ChargeLevel * 100);
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error getting battery level: {ex.Message}");
+            return 50; // Default fallback
+        }
+    }
+}

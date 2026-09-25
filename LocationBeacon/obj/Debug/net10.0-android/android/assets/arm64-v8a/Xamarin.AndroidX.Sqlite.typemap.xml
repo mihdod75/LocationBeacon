@@ -1,0 +1,50 @@
+<api type="debug" assembly-name="Xamarin.AndroidX.Sqlite" mvid="3865d880706d4634b5213e0dffca8628">
+  <java-to-managed>
+    <entry java-name="androidx/sqlite/db/SupportSQLiteDatabase" managed-name="AndroidX.Sqlite.Db.ISupportSQLiteDatabase, Xamarin.AndroidX.Sqlite" skip-in-java-to-managed="True" managed-type-token-id="33554458" />
+    <entry java-name="androidx/sqlite/db/SupportSQLiteDatabase" managed-name="AndroidX.Sqlite.Db.ISupportSQLiteDatabaseInvoker, Xamarin.AndroidX.Sqlite" managed-type-token-id="33554459" />
+    <entry java-name="androidx/sqlite/db/SupportSQLiteOpenHelper$Callback" managed-name="AndroidX.Sqlite.Db.SupportSQLiteOpenHelperCallback, Xamarin.AndroidX.Sqlite" managed-type-token-id="33554460" />
+    <entry java-name="androidx/sqlite/db/SupportSQLiteOpenHelper$Callback" managed-name="AndroidX.Sqlite.Db.SupportSQLiteOpenHelperCallbackInvoker, Xamarin.AndroidX.Sqlite" managed-type-token-id="33554461" />
+    <entry java-name="androidx/sqlite/db/SupportSQLiteOpenHelper$Configuration" managed-name="AndroidX.Sqlite.Db.SupportSQLiteOpenHelperConfiguration, Xamarin.AndroidX.Sqlite" managed-type-token-id="33554462" />
+    <entry java-name="androidx/sqlite/db/SupportSQLiteOpenHelper$Configuration$Builder" managed-name="AndroidX.Sqlite.Db.SupportSQLiteOpenHelperConfiguration+Builder, Xamarin.AndroidX.Sqlite" managed-type-token-id="33554477" />
+    <entry java-name="androidx/sqlite/db/SupportSQLiteOpenHelper$Configuration$Companion" managed-name="AndroidX.Sqlite.Db.SupportSQLiteOpenHelperConfiguration+Companion, Xamarin.AndroidX.Sqlite" managed-type-token-id="33554478" />
+    <entry java-name="androidx/sqlite/db/SupportSQLiteOpenHelper$Factory" managed-name="AndroidX.Sqlite.Db.ISupportSQLiteOpenHelperFactory, Xamarin.AndroidX.Sqlite" skip-in-java-to-managed="True" managed-type-token-id="33554463" />
+    <entry java-name="androidx/sqlite/db/SupportSQLiteOpenHelper$Factory" managed-name="AndroidX.Sqlite.Db.ISupportSQLiteOpenHelperFactoryInvoker, Xamarin.AndroidX.Sqlite" managed-type-token-id="33554464" />
+    <entry java-name="androidx/sqlite/db/SupportSQLiteOpenHelper" managed-name="AndroidX.Sqlite.Db.ISupportSQLiteOpenHelper, Xamarin.AndroidX.Sqlite" skip-in-java-to-managed="True" managed-type-token-id="33554465" />
+    <entry java-name="androidx/sqlite/db/SupportSQLiteOpenHelper" managed-name="AndroidX.Sqlite.Db.ISupportSQLiteOpenHelperInvoker, Xamarin.AndroidX.Sqlite" managed-type-token-id="33554466" />
+    <entry java-name="androidx/sqlite/db/SupportSQLiteProgram" managed-name="AndroidX.Sqlite.Db.ISupportSQLiteProgram, Xamarin.AndroidX.Sqlite" skip-in-java-to-managed="True" managed-type-token-id="33554467" />
+    <entry java-name="androidx/sqlite/db/SupportSQLiteProgram" managed-name="AndroidX.Sqlite.Db.ISupportSQLiteProgramInvoker, Xamarin.AndroidX.Sqlite" managed-type-token-id="33554468" />
+    <entry java-name="androidx/sqlite/db/SupportSQLiteQuery" managed-name="AndroidX.Sqlite.Db.ISupportSQLiteQuery, Xamarin.AndroidX.Sqlite" skip-in-java-to-managed="True" managed-type-token-id="33554469" />
+    <entry java-name="androidx/sqlite/db/SupportSQLiteQuery" managed-name="AndroidX.Sqlite.Db.ISupportSQLiteQueryInvoker, Xamarin.AndroidX.Sqlite" managed-type-token-id="33554470" />
+    <entry java-name="androidx/sqlite/db/SupportSQLiteStatement" managed-name="AndroidX.Sqlite.Db.ISupportSQLiteStatement, Xamarin.AndroidX.Sqlite" skip-in-java-to-managed="True" managed-type-token-id="33554471" />
+    <entry java-name="androidx/sqlite/db/SupportSQLiteStatement" managed-name="AndroidX.Sqlite.Db.ISupportSQLiteStatementInvoker, Xamarin.AndroidX.Sqlite" managed-type-token-id="33554472" />
+    <entry java-name="androidx/sqlite/db/SimpleSQLiteQuery" managed-name="AndroidX.Sqlite.Db.SimpleSQLiteQuery, Xamarin.AndroidX.Sqlite" managed-type-token-id="33554473" />
+    <entry java-name="androidx/sqlite/db/SimpleSQLiteQuery$Companion" managed-name="AndroidX.Sqlite.Db.SimpleSQLiteQuery+Companion, Xamarin.AndroidX.Sqlite" managed-type-token-id="33554479" />
+    <entry java-name="androidx/sqlite/db/SupportSQLiteCompat" managed-name="AndroidX.Sqlite.Db.SupportSQLiteCompat, Xamarin.AndroidX.Sqlite" managed-type-token-id="33554474" />
+    <entry java-name="androidx/sqlite/db/SupportSQLiteQueryBuilder" managed-name="AndroidX.Sqlite.Db.SupportSQLiteQueryBuilder, Xamarin.AndroidX.Sqlite" managed-type-token-id="33554475" />
+    <entry java-name="androidx/sqlite/db/SupportSQLiteQueryBuilder$Companion" managed-name="AndroidX.Sqlite.Db.SupportSQLiteQueryBuilder+Companion, Xamarin.AndroidX.Sqlite" managed-type-token-id="33554480" />
+  </java-to-managed>
+  <managed-to-java>
+    <entry java-name="androidx/sqlite/db/SupportSQLiteDatabase" managed-name="AndroidX.Sqlite.Db.ISupportSQLiteDatabase, Xamarin.AndroidX.Sqlite" skip-in-java-to-managed="True" managed-type-token-id="33554458" />
+    <entry java-name="androidx/sqlite/db/SupportSQLiteDatabase" managed-name="AndroidX.Sqlite.Db.ISupportSQLiteDatabaseInvoker, Xamarin.AndroidX.Sqlite" managed-type-token-id="33554459" />
+    <entry java-name="androidx/sqlite/db/SupportSQLiteOpenHelper$Callback" managed-name="AndroidX.Sqlite.Db.SupportSQLiteOpenHelperCallback, Xamarin.AndroidX.Sqlite" managed-type-token-id="33554460" />
+    <entry java-name="androidx/sqlite/db/SupportSQLiteOpenHelper$Callback" managed-name="AndroidX.Sqlite.Db.SupportSQLiteOpenHelperCallbackInvoker, Xamarin.AndroidX.Sqlite" managed-type-token-id="33554461" />
+    <entry java-name="androidx/sqlite/db/SupportSQLiteOpenHelper$Configuration" managed-name="AndroidX.Sqlite.Db.SupportSQLiteOpenHelperConfiguration, Xamarin.AndroidX.Sqlite" managed-type-token-id="33554462" />
+    <entry java-name="androidx/sqlite/db/SupportSQLiteOpenHelper$Configuration$Builder" managed-name="AndroidX.Sqlite.Db.SupportSQLiteOpenHelperConfiguration+Builder, Xamarin.AndroidX.Sqlite" managed-type-token-id="33554477" />
+    <entry java-name="androidx/sqlite/db/SupportSQLiteOpenHelper$Configuration$Companion" managed-name="AndroidX.Sqlite.Db.SupportSQLiteOpenHelperConfiguration+Companion, Xamarin.AndroidX.Sqlite" managed-type-token-id="33554478" />
+    <entry java-name="androidx/sqlite/db/SupportSQLiteOpenHelper$Factory" managed-name="AndroidX.Sqlite.Db.ISupportSQLiteOpenHelperFactory, Xamarin.AndroidX.Sqlite" skip-in-java-to-managed="True" managed-type-token-id="33554463" />
+    <entry java-name="androidx/sqlite/db/SupportSQLiteOpenHelper$Factory" managed-name="AndroidX.Sqlite.Db.ISupportSQLiteOpenHelperFactoryInvoker, Xamarin.AndroidX.Sqlite" managed-type-token-id="33554464" />
+    <entry java-name="androidx/sqlite/db/SupportSQLiteOpenHelper" managed-name="AndroidX.Sqlite.Db.ISupportSQLiteOpenHelper, Xamarin.AndroidX.Sqlite" skip-in-java-to-managed="True" managed-type-token-id="33554465" />
+    <entry java-name="androidx/sqlite/db/SupportSQLiteOpenHelper" managed-name="AndroidX.Sqlite.Db.ISupportSQLiteOpenHelperInvoker, Xamarin.AndroidX.Sqlite" managed-type-token-id="33554466" />
+    <entry java-name="androidx/sqlite/db/SupportSQLiteProgram" managed-name="AndroidX.Sqlite.Db.ISupportSQLiteProgram, Xamarin.AndroidX.Sqlite" skip-in-java-to-managed="True" managed-type-token-id="33554467" />
+    <entry java-name="androidx/sqlite/db/SupportSQLiteProgram" managed-name="AndroidX.Sqlite.Db.ISupportSQLiteProgramInvoker, Xamarin.AndroidX.Sqlite" managed-type-token-id="33554468" />
+    <entry java-name="androidx/sqlite/db/SupportSQLiteQuery" managed-name="AndroidX.Sqlite.Db.ISupportSQLiteQuery, Xamarin.AndroidX.Sqlite" skip-in-java-to-managed="True" managed-type-token-id="33554469" />
+    <entry java-name="androidx/sqlite/db/SupportSQLiteQuery" managed-name="AndroidX.Sqlite.Db.ISupportSQLiteQueryInvoker, Xamarin.AndroidX.Sqlite" managed-type-token-id="33554470" />
+    <entry java-name="androidx/sqlite/db/SupportSQLiteStatement" managed-name="AndroidX.Sqlite.Db.ISupportSQLiteStatement, Xamarin.AndroidX.Sqlite" skip-in-java-to-managed="True" managed-type-token-id="33554471" />
+    <entry java-name="androidx/sqlite/db/SupportSQLiteStatement" managed-name="AndroidX.Sqlite.Db.ISupportSQLiteStatementInvoker, Xamarin.AndroidX.Sqlite" managed-type-token-id="33554472" />
+    <entry java-name="androidx/sqlite/db/SimpleSQLiteQuery" managed-name="AndroidX.Sqlite.Db.SimpleSQLiteQuery, Xamarin.AndroidX.Sqlite" managed-type-token-id="33554473" />
+    <entry java-name="androidx/sqlite/db/SimpleSQLiteQuery$Companion" managed-name="AndroidX.Sqlite.Db.SimpleSQLiteQuery+Companion, Xamarin.AndroidX.Sqlite" managed-type-token-id="33554479" />
+    <entry java-name="androidx/sqlite/db/SupportSQLiteCompat" managed-name="AndroidX.Sqlite.Db.SupportSQLiteCompat, Xamarin.AndroidX.Sqlite" managed-type-token-id="33554474" />
+    <entry java-name="androidx/sqlite/db/SupportSQLiteQueryBuilder" managed-name="AndroidX.Sqlite.Db.SupportSQLiteQueryBuilder, Xamarin.AndroidX.Sqlite" managed-type-token-id="33554475" />
+    <entry java-name="androidx/sqlite/db/SupportSQLiteQueryBuilder$Companion" managed-name="AndroidX.Sqlite.Db.SupportSQLiteQueryBuilder+Companion, Xamarin.AndroidX.Sqlite" managed-type-token-id="33554480" />
+  </managed-to-java>
+</api>

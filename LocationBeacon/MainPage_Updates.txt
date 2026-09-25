@@ -1,0 +1,133 @@
+CRITICAL UPDATE NEEDED FOR MainPage.xaml.cs
+============================================
+
+In the StartBeaconAsync() method, after requesting LocationWhenInUse permission, add this code to also request background location:
+
+---
+
+REPLACE THIS:
+
+	private async Task StartBeaconAsync()
+	{
+		var storedKey = _preferencesService.GetPairingKey();
+		if (string.IsNullOrWhiteSpace(storedKey))
+		{
+			await DisplayAlert("Error", "Please complete enrollment to get the pairing key", "OK");
+			return;
+		}
+
+		// Request location permissions before starting beacon
+		AddLog("Requesting location permissions...");
+		var locationStatus = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
+
+		if (locationStatus != PermissionStatus.Granted)
+		{
+			AddLog("Location permission not granted. Requesting from user...");
+			locationStatus = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
+		}
+
+		if (locationStatus != PermissionStatus.Granted)
+		{
+			AddLog("ERROR: Location permission denied by user");
+			await DisplayAlert("Permission Required", 
+				"Location permission is required to start the beacon. Please enable it in app settings.", 
+				"OK");
+			return;
+		}
+
+		AddLog("✓ Location permissions granted");
+
+		_isBeaconRunning = true;
+		ToggleBeaconButton.Text = "Stop Beacon";
+		ToggleBeaconButton.BackgroundColor = Color.Parse("#F44336");
+		AddLog("Starting beacon...");
+
+		// Run StartBeaconAsync in background and don't wait for completion
+		#pragma warning disable CS4014
+		_beaconService.StartBeaconAsync();
+		#pragma warning restore CS4014
+	}
+
+---
+
+WITH THIS:
+
+	private async Task StartBeaconAsync()
+	{
+		var storedKey = _preferencesService.GetPairingKey();
+		if (string.IsNullOrWhiteSpace(storedKey))
+		{
+			await DisplayAlert("Error", "Please complete enrollment to get the pairing key", "OK");
+			return;
+		}
+
+		// Request location permissions before starting beacon
+		AddLog("Requesting location permissions...");
+
+		// First: Check and request foreground location (LocationWhenInUse)
+		var locationStatus = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
+
+		if (locationStatus != PermissionStatus.Granted)
+		{
+			AddLog("Location permission not granted. Requesting from user...");
+			locationStatus = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
+		}
+
+		if (locationStatus != PermissionStatus.Granted)
+		{
+			AddLog("ERROR: Location permission denied by user");
+			await DisplayAlert("Permission Required", 
+				"Location permission is required to start the beacon. Please enable it in app settings.", 
+				"OK");
+			return;
+		}
+
+		AddLog("✓ Foreground location permission granted");
+
+		// Second: Check and request background location (LocationAlways) for continuous beacon in background
+		// This is essential for the beacon to work when app is backgrounded or in Doze mode
+		var backgroundLocationStatus = await Permissions.CheckStatusAsync<Permissions.LocationAlways>();
+
+		if (backgroundLocationStatus != PermissionStatus.Granted)
+		{
+			AddLog("Requesting background location permission for continuous beacon operation...");
+			backgroundLocationStatus = await Permissions.RequestAsync<Permissions.LocationAlways>();
+			AddLog($"Background location permission: {backgroundLocationStatus}");
+		}
+		else
+		{
+			AddLog("✓ Background location permission already granted");
+		}
+
+		// Note: On some versions of Android, LocationAlways might not be grantable (degraded mode)
+		// In this case, the app will still work with foreground-only location
+		if (backgroundLocationStatus == PermissionStatus.Granted)
+		{
+			AddLog("✓ Both foreground and background location permissions granted - beacon will work in true background");
+		}
+		else
+		{
+			AddLog("⚠ Background location not available - beacon may have reduced functionality when app is backgrounded");
+		}
+
+		_isBeaconRunning = true;
+		ToggleBeaconButton.Text = "Stop Beacon";
+		ToggleBeaconButton.BackgroundColor = Color.Parse("#F44336");
+		AddLog("Starting beacon...");
+
+		// Run StartBeaconAsync in background and don't wait for completion
+		#pragma warning disable CS4014
+		_beaconService.StartBeaconAsync();
+		#pragma warning restore CS4014
+	}
+
+---
+
+KEY CHANGES:
+1. Added request for LocationAlways (background location) permission
+2. Gracefully handles case where background location can't be granted
+3. Provides user feedback about permission status
+4. Prevents LocationService from trying to request permissions from background thread
+
+This ensures permissions are requested from the UI thread BEFORE the foreground service starts,
+which is the correct Android permission request pattern.

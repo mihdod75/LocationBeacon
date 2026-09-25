@@ -1,0 +1,143 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>LocationBeacon</name>
+    </assembly>
+    <members>
+        <member name="T:LocationBeacon.Platforms.Android.BootReceiver">
+            <summary>
+            Receives BOOT_COMPLETED broadcast and restarts the beacon foreground service
+            This ensures beacons resume after device restart
+            </summary>
+        </member>
+        <member name="T:LocationBeacon.Services.BeaconAlarmManager">
+            <summary>
+            Manages AlarmManager scheduling to wake the device and trigger beacon sends
+            even when the device is in deep sleep or Doze mode.
+            Uses setAndAllowWhileIdle for Android 12+ to work around Doze restrictions.
+            </summary>
+        </member>
+        <member name="M:LocationBeacon.Services.BeaconService.GetLocationForBeaconAsync">
+            <summary>
+            Attempts to get location for beacon transmission.
+            Uses adaptive timeout strategy that escalates on repeated failures.
+            Returns (0, 0, 0) if location cannot be acquired.
+            This method is called from BeaconForegroundService to determine if beacon should be sent.
+            </summary>
+        </member>
+        <member name="M:LocationBeacon.Services.BeaconService.CalculateHaversineDistance(System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            Calculates distance between two geographic coordinates using the Haversine formula.
+            </summary>
+            <returns>Distance in meters</returns>
+        </member>
+        <member name="M:LocationBeacon.Services.BeaconService.IsPositionDuplicate(System.Double,System.Double)">
+            <summary>
+            Checks if current position is too close to last known position (within 10x10 meter area).
+            Returns true if position is considered a duplicate (within the threshold).
+            </summary>
+        </member>
+        <member name="T:LocationBeacon.Services.BeaconWorkManager">
+            <summary>
+            Uses WorkManager (Google's recommended API) for reliable background task scheduling.
+            WorkManager handles Doze mode better than AlarmManager for periodic tasks.
+            </summary>
+        </member>
+        <member name="T:LocationBeacon.Services.BeaconWorker">
+            <summary>
+            Worker that runs periodic beacon tasks.
+            WorkManager will call this even during Doze mode with better reliability than AlarmManager.
+            </summary>
+        </member>
+        <member name="T:LocationBeacon.Services.LocationService">
+            <summary>
+            Location service with adaptive timeout strategy.
+            No caching: always requests fresh location when called.
+            On failure, escalates timeout for next acquisition attempt (persists across beacon cycles).
+            Only resets attempt count on successful acquisition.
+            </summary>
+        </member>
+        <member name="M:LocationBeacon.Services.LocationService.TryGetLocationWithAdaptiveTimeout">
+            <summary>
+            Attempts to acquire location with adaptive timeout.
+            Timeout escalates with each failed attempt: 3s, 5s, 7s, ... up to 20s per attempt.
+            Across all attempts in a cycle, total timeout is capped at 60 seconds.
+            Returns (0, 0, 0) if location cannot be acquired.
+            Resets attempt count to 0 on success.
+            </summary>
+        </member>
+        <member name="T:LocationBeacon.Services.NetworkDiagnostics">
+            <summary>
+            Provides detailed network diagnostics to help identify connectivity issues.
+            Used when beacon sends fail to inform user of specific problems.
+            </summary>
+        </member>
+        <member name="M:LocationBeacon.Services.NetworkDiagnostics.GetNetworkDiagnosticsMessage">
+            <summary>
+            Diagnoses why beacon send failed and returns user-friendly message.
+            </summary>
+        </member>
+        <member name="M:LocationBeacon.Services.NetworkDiagnostics.IsMobileDataEnabled">
+            <summary>
+            Checks if mobile data is enabled at the system level.
+            </summary>
+        </member>
+        <member name="M:LocationBeacon.Services.NetworkDiagnostics.IsCellularConnection(Android.Net.NetworkCapabilities)">
+            <summary>
+            Checks if the active network is cellular (mobile data).
+            </summary>
+        </member>
+        <member name="M:LocationBeacon.Services.NetworkDiagnostics.GetDetailedNetworkStatus">
+            <summary>
+            Gets full network status summary for logging.
+            </summary>
+        </member>
+        <member name="T:LocationBeacon.Services.NetworkStateManager">
+            <summary>
+            Monitors network connectivity state changes on Android.
+            Provides methods to check network availability and handle Doze mode transitions.
+            </summary>
+        </member>
+        <member name="M:LocationBeacon.Services.NetworkStateManager.CheckNetworkAvailability">
+            <summary>
+            Checks if network is currently available (working or connecting).
+            </summary>
+        </member>
+        <member name="M:LocationBeacon.Services.NetworkStateManager.StartMonitoring">
+            <summary>
+            Starts monitoring network state changes.
+            Call when beacon service starts.
+            </summary>
+        </member>
+        <member name="M:LocationBeacon.Services.NetworkStateManager.StopMonitoring">
+            <summary>
+            Stops monitoring network state changes.
+            Call when beacon service stops.
+            </summary>
+        </member>
+        <member name="M:LocationBeacon.Services.NetworkStateManager.WaitForNetworkAsync(System.Int32)">
+            <summary>
+            Waits for network to become available after a disconnect.
+            Returns true if network became available within timeout, false if timeout.
+            Used during Doze recovery.
+            </summary>
+        </member>
+        <member name="T:LocationBeacon.Services.NetworkStateManager.NetworkCallback">
+            <summary>
+            Internal callback for network state changes.
+            </summary>
+        </member>
+        <member name="M:LocationBeacon.MainActivity.RequestBatteryExemptionOnDemand">
+            <summary>
+            Public method to request battery exemption on-demand (e.g., when user starts beacon)
+            This should only be called in response to user action, not on app startup
+            </summary>
+        </member>
+        <member name="T:LocationBeacon.Resource">
+            <summary>
+            Android Resource Designer class.
+            Exposes the Android Resource designer assembly into the project Namespace.
+            </summary>
+        </member>
+    </members>
+</doc>

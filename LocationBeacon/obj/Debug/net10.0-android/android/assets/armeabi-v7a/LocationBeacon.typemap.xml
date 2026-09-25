@@ -1,0 +1,18 @@
+<api type="debug" assembly-name="LocationBeacon" mvid="1d3aa22d39f947e1bcd456637d325528">
+  <java-to-managed>
+    <entry java-name="crc64dcd422dcea5c613f/MainActivity" managed-name="LocationBeacon.MainActivity, LocationBeacon" managed-type-token-id="33554444" />
+    <entry java-name="crc64dcd422dcea5c613f/MainApplication" managed-name="LocationBeacon.MainApplication, LocationBeacon" managed-type-token-id="33554445" />
+    <entry java-name="crc64f9abaa483bd64c1f/BeaconWorker" managed-name="LocationBeacon.Services.BeaconWorker, LocationBeacon" managed-type-token-id="33554452" />
+    <entry java-name="crc64f9abaa483bd64c1f/NetworkStateManager_NetworkCallback" managed-name="LocationBeacon.Services.NetworkStateManager+NetworkCallback, LocationBeacon" managed-type-token-id="33554486" />
+    <entry java-name="crc6423d5b0e3292d0ba4/BeaconForegroundService" managed-name="LocationBeacon.Platforms.Android.BeaconForegroundService, LocationBeacon" managed-type-token-id="33554457" />
+    <entry java-name="crc6423d5b0e3292d0ba4/BootReceiver" managed-name="LocationBeacon.Platforms.Android.BootReceiver, LocationBeacon" managed-type-token-id="33554458" />
+  </java-to-managed>
+  <managed-to-java>
+    <entry java-name="crc64dcd422dcea5c613f/MainActivity" managed-name="LocationBeacon.MainActivity, LocationBeacon" managed-type-token-id="33554444" />
+    <entry java-name="crc64dcd422dcea5c613f/MainApplication" managed-name="LocationBeacon.MainApplication, LocationBeacon" managed-type-token-id="33554445" />
+    <entry java-name="crc64f9abaa483bd64c1f/BeaconWorker" managed-name="LocationBeacon.Services.BeaconWorker, LocationBeacon" managed-type-token-id="33554452" />
+    <entry java-name="crc64f9abaa483bd64c1f/NetworkStateManager_NetworkCallback" managed-name="LocationBeacon.Services.NetworkStateManager+NetworkCallback, LocationBeacon" managed-type-token-id="33554486" />
+    <entry java-name="crc6423d5b0e3292d0ba4/BeaconForegroundService" managed-name="LocationBeacon.Platforms.Android.BeaconForegroundService, LocationBeacon" managed-type-token-id="33554457" />
+    <entry java-name="crc6423d5b0e3292d0ba4/BootReceiver" managed-name="LocationBeacon.Platforms.Android.BootReceiver, LocationBeacon" managed-type-token-id="33554458" />
+  </managed-to-java>
+</api>

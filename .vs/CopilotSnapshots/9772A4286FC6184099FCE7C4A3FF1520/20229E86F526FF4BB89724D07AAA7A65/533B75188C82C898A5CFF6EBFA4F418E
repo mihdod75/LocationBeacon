@@ -1,0 +1,566 @@
+﻿using System.Diagnostics;
+using System.Text;
+using System.Text.Json;
+using LocationBeacon.Models;
+using DebugWriter = System.Diagnostics.Debug;
+
+#if __ANDROID__
+using Android.OS;
+using Android.Content;
+using Android.App;
+#endif
+
+namespace LocationBeacon.Services;
+
+public class BeaconService
+{
+    private HttpClient _httpClient;
+    private readonly LocationService _locationService;
+    private readonly PreferencesService _preferencesService;
+    private readonly string _beaconUrl = "https://kid-safe-spots.lovable.app/api/public/beacon";
+    private CancellationTokenSource? _cancellationTokenSource;
+    private bool _isRunning;
+    private DateTime _lastSendTime = DateTime.MinValue;
+    private int _consecutiveFailures = 0;
+
+#if __ANDROID__
+    private Android.OS.PowerManager.WakeLock? _wakeLock;
+    private BeaconAlarmManager? _alarmManager;
+    private NetworkStateManager? _networkStateManager;
+#endif
+
+    private const int MaxRetries = 3;
+    private const int BaseRetryDelayMs = 1000;
+    private const int DozeNetworkRecoveryDelayMs = 5000;
+
+    private const int MinPairingKeyLength = 16;
+    private const int MaxPairingKeyLength = 128;
+    private const double MinLatitude = -90;
+    private const double MaxLatitude = 90;
+    private const double MinLongitude = -180;
+    private const double MaxLongitude = 180;
+    private const int MinBatteryLevel = 0;
+    private const int MaxBatteryLevel = 100;
+    private const double MinAccuracy = 0;
+    private const int MaxTimeOffsetPastMinutes = 5;
+    private const int MaxTimeOffsetFutureMinutes = 2;
+
+    public event EventHandler<string>? StatusChanged;
+    public event EventHandler<Exception>? ErrorOccurred;
+
+    public bool IsRunning => _isRunning;
+
+    public BeaconService()
+    {
+        _httpClient = new HttpClient();
+        _httpClient.Timeout = TimeSpan.FromSeconds(15);
+        _locationService = new LocationService();
+        _preferencesService = new PreferencesService();
+    }
+
+    public async Task StartBeaconAsync()
+    {
+        if (_isRunning)
+            return;
+
+        _isRunning = true;
+        _cancellationTokenSource = new CancellationTokenSource();
+        _lastSendTime = DateTime.UtcNow;
+
+        StatusChanged?.Invoke(this, "Beacon started");
+        DebugWriter.WriteLine("=== BEACON STARTED (10s Intervals - Background Persistent Mode) ===");
+
+#if __ANDROID__
+        try
+        {
+            var context = Android.App.Application.Context;
+
+            // Check permissions before starting foreground service
+            if (!LocationBeacon.Platforms.Android.PermissionManager.HasRequiredLocationPermissions(context))
+            {
+                DebugWriter.WriteLine("✗ Location permissions not granted");
+                var permException = new PermissionException("Location permissions (ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION) not granted. Please enable location permissions in app settings.");
+                ErrorOccurred?.Invoke(this, permException);
+                _isRunning = false;
+                return;
+            }
+
+            if (!LocationBeacon.Platforms.Android.PermissionManager.HasForegroundServiceLocationPermission(context))
+            {
+                DebugWriter.WriteLine("✗ Foreground service location permission not granted");
+                var permException = new PermissionException("Foreground service location permission not granted. Please enable location permissions in app settings.");
+                ErrorOccurred?.Invoke(this, permException);
+                _isRunning = false;
+                return;
+            }
+
+            // Start foreground service - it will handle all beacon sending
+            var serviceIntent = new Android.Content.Intent(context, typeof(LocationBeacon.Platforms.Android.BeaconForegroundService));
+            serviceIntent.SetAction("com.locationbeacon.START_BEACON");
+
+            if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O) // Android 8+
+            {
+                context.StartForegroundService(serviceIntent);
+                DebugWriter.WriteLine("✓ Foreground service started (will run in background and send beacons every 10s)");
+            }
+            else
+            {
+                context.StartService(serviceIntent);
+                DebugWriter.WriteLine("✓ Service started (pre-Android 8)");
+            }
+
+            // Network monitoring
+            _networkStateManager = new NetworkStateManager(context);
+            _networkStateManager.StartMonitoring();
+            DebugWriter.WriteLine("✓ Network monitoring started");
+
+            StatusChanged?.Invoke(this, "Sending every 10s (Background Persistent)");
+        }
+        catch (Exception ex)
+        {
+            DebugWriter.WriteLine($"✗ Error: {ex.Message}");
+            ErrorOccurred?.Invoke(this, ex);
+            _isRunning = false;
+        }
+#endif
+    }
+
+    public void StopBeacon()
+    {
+        _isRunning = false;
+        _cancellationTokenSource?.Cancel();
+
+#if __ANDROID__
+        try
+        {
+            _networkStateManager?.StopMonitoring();
+            DebugWriter.WriteLine("✓ Network monitoring stopped");
+        }
+        catch (Exception ex)
+        {
+            DebugWriter.WriteLine($"✗ Error stopping: {ex.Message}");
+        }
+#endif
+
+        StatusChanged?.Invoke(this, "Beacon stopped");
+        DebugWriter.WriteLine("=== BEACON STOPPED ===");
+    }
+
+    /// <summary>
+    /// Attempts to get location for beacon transmission.
+    /// Uses adaptive timeout strategy that escalates on repeated failures.
+    /// Returns (0, 0, 0) if location cannot be acquired.
+    /// This method is called from BeaconForegroundService to determine if beacon should be sent.
+    /// </summary>
+    public async Task<(double Latitude, double Longitude, double Accuracy)> GetLocationForBeaconAsync()
+    {
+        try
+        {
+            var (latitude, longitude, accuracy) = await _locationService.TryGetLocationWithAdaptiveTimeout();
+            return (latitude, longitude, accuracy);
+        }
+        catch (Exception ex)
+        {
+            DebugWriter.WriteLine($"✗ Error in GetLocationForBeaconAsync: {ex.Message}");
+            return (0, 0, 0);
+        }
+    }
+
+    public async Task SendBeaconDirectAsync()
+    {
+        try
+        {
+            DebugWriter.WriteLine("⏱ SendBeaconDirectAsync called");
+
+#if __ANDROID__
+            AcquireWakeLockForSend();
+#endif
+
+            try
+            {
+                await SendBeaconAsync();
+            }
+            finally
+            {
+#if __ANDROID__
+                ReleaseWakeLock();
+#endif
+            }
+
+            DebugWriter.WriteLine("✓ SendBeaconDirectAsync completed");
+        }
+        catch (Exception ex)
+        {
+            DebugWriter.WriteLine($"✗ SendBeaconDirectAsync error: {ex.Message}");
+            throw;
+        }
+    }
+
+    private async Task SendBeaconAsync()
+    {
+        var stepTimer = Stopwatch.StartNew();
+
+        try
+        {
+#if __ANDROID__
+            // Check network availability before attempting to send
+            if (_networkStateManager != null && !_networkStateManager.CheckNetworkAvailability())
+            {
+                DebugWriter.WriteLine("⚠ Network unavailable, waiting for recovery...");
+                bool recovered = await _networkStateManager.WaitForNetworkAsync(DozeNetworkRecoveryDelayMs);
+                if (!recovered)
+                {
+                    StatusChanged?.Invoke(this, "Error: Network unavailable (possible Doze mode)");
+                    DebugWriter.WriteLine("✗ Network did not recover, skipping send attempt");
+                    return;
+                }
+                DebugWriter.WriteLine("✓ Network recovered, proceeding with send");
+            }
+#endif
+
+            var pairingKey = _preferencesService.GetPairingKey();
+
+            var pairingKeyValidation = ValidatePairingKey(pairingKey);
+            if (!pairingKeyValidation.IsValid)
+            {
+                StatusChanged?.Invoke(this, $"Error: {pairingKeyValidation.Message}");
+                return;
+            }
+
+            stepTimer.Restart();
+            var (latitude, longitude, accuracy) = await _locationService.GetLocationAsync();
+            var locationTime = stepTimer.Elapsed.TotalSeconds;
+            if (locationTime > 5)
+            {
+                DebugWriter.WriteLine($"⚠ WARNING: Slow location acquisition took {locationTime:F2}s");
+            }
+            else
+            {
+                DebugWriter.WriteLine($"✓ Location acquisition took {locationTime:F2}s");
+            }
+
+            var coordinatesValidation = ValidateCoordinates(latitude, longitude);
+            if (!coordinatesValidation.IsValid)
+            {
+                StatusChanged?.Invoke(this, $"Error: {coordinatesValidation.Message}");
+                return;
+            }
+
+            var battery = _locationService.GetBatteryLevel();
+
+            var batteryValidation = ValidateBatteryLevel(battery);
+            if (!batteryValidation.IsValid)
+            {
+                StatusChanged?.Invoke(this, $"Error: {batteryValidation.Message}");
+                return;
+            }
+
+            var accuracyValidation = ValidateAccuracy(accuracy);
+            if (!accuracyValidation.IsValid)
+            {
+                StatusChanged?.Invoke(this, $"Error: {accuracyValidation.Message}");
+                return;
+            }
+
+            var recordedAt = DateTime.UtcNow;
+
+            var timestampValidation = ValidateTimestamp(recordedAt);
+            if (!timestampValidation.IsValid)
+            {
+                StatusChanged?.Invoke(this, $"Error: {timestampValidation.Message}");
+                return;
+            }
+
+            var payload = new BeaconPayload
+            {
+                PairingKey = pairingKey,
+                Latitude = latitude,
+                Longitude = longitude,
+                BatteryLevel = battery,
+                AccuracyM = accuracy,
+                RecordedAt = recordedAt.ToString("yyyy-MM-ddTHH:mm:ssZ", System.Globalization.CultureInfo.InvariantCulture)
+            };
+
+            var options = new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                WriteIndented = false
+            };
+
+            stepTimer.Restart();
+            var json = JsonSerializer.Serialize(payload, options);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var serializeTime = stepTimer.Elapsed.TotalSeconds;
+            DebugWriter.WriteLine($"Serialization took {serializeTime:F4}s");
+
+            DebugWriter.WriteLine($"Sending payload: {json}");
+
+            bool success = false;
+            Exception? lastException = null;
+
+            for (int attempt = 0; attempt < MaxRetries; attempt++)
+            {
+                try
+                {
+                    stepTimer.Restart();
+                    var response = await _httpClient.PostAsync(_beaconUrl, content);
+                    var httpTime = stepTimer.Elapsed.TotalSeconds;
+                    DebugWriter.WriteLine($"HTTP request took {httpTime:F2}s");
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var timeSinceLastSend = DateTime.UtcNow - _lastSendTime;
+                        _lastSendTime = DateTime.UtcNow;
+                        StatusChanged?.Invoke(this, $"Beacon sent at {DateTime.Now:HH:mm:ss} (interval: {timeSinceLastSend.TotalSeconds:F1}s)");
+                        DebugWriter.WriteLine($"✓ Payload sent successfully. Total interval from last send: {timeSinceLastSend.TotalSeconds:F2}s");
+                        _consecutiveFailures = 0;
+                        success = true;
+                        break;
+                    }
+                    else
+                    {
+                        var errorContent = await response.Content.ReadAsStringAsync();
+                        lastException = new Exception($"HTTP {response.StatusCode}: {errorContent}");
+                        DebugWriter.WriteLine($"✗ Error response (attempt {attempt + 1}/{MaxRetries}): {errorContent}");
+
+                        if ((int)response.StatusCode >= 400 && (int)response.StatusCode < 500)
+                        {
+                            StatusChanged?.Invoke(this, $"Beacon failed: {response.StatusCode} - {errorContent}");
+                            break;
+                        }
+
+                        if (attempt < MaxRetries - 1)
+                        {
+                            int delayMs = BaseRetryDelayMs * (int)Math.Pow(2, attempt);
+                            DebugWriter.WriteLine($"Retrying in {delayMs}ms...");
+                            await Task.Delay(delayMs);
+                        }
+                    }
+                }
+                catch (HttpRequestException ex) when (attempt < MaxRetries - 1)
+                {
+                    lastException = ex;
+                    DebugWriter.WriteLine($"✗ Request exception (attempt {attempt + 1}/{MaxRetries}): {ex.Message}");
+
+                    if (ex.Message.Contains("Connection") ||
+                        ex.Message.Contains("timeout") ||
+                        ex.Message.Contains("abort") ||
+                        ex.InnerException?.Message.Contains("Connection") == true ||
+                        ex.InnerException?.Message.Contains("abort") == true)
+                    {
+                        DebugWriter.WriteLine("⚠ Detected network abort/issue (possible Doze mode exit), resetting connection...");
+                        RecreateHttpClient();
+
+#if __ANDROID__
+                        // Enhanced Doze recovery: wait for network to stabilize
+                        if (_networkStateManager != null)
+                        {
+                            DebugWriter.WriteLine("⏳ Waiting for network recovery from Doze...");
+                            bool recovered = await _networkStateManager.WaitForNetworkAsync(DozeNetworkRecoveryDelayMs);
+                            if (recovered)
+                            {
+                                DebugWriter.WriteLine("✓ Network recovered, retrying immediately");
+                            }
+                            else
+                            {
+                                DebugWriter.WriteLine("✗ Network recovery timeout, proceeding with retry anyway");
+                            }
+                        }
+                        else
+#endif
+                        {
+                            int delayMs = Math.Max(5000, BaseRetryDelayMs * (int)Math.Pow(2, attempt + 1));
+                            DebugWriter.WriteLine($"⏳ Waiting {delayMs}ms before retry (Doze recovery delay)...");
+                            await Task.Delay(delayMs);
+                        }
+                    }
+                    else
+                    {
+                        int delayMs = BaseRetryDelayMs * (int)Math.Pow(2, attempt);
+                        DebugWriter.WriteLine($"Retrying in {delayMs}ms...");
+                        await Task.Delay(delayMs);
+                    }
+                }
+                catch (HttpRequestException ex)
+                {
+                    lastException = ex;
+                    DebugWriter.WriteLine($"✗ Request exception (final attempt): {ex.Message}");
+                    _consecutiveFailures++;
+                    StatusChanged?.Invoke(this, $"Error: Network request failed - {ex.Message}");
+                }
+            }
+
+            if (!success && lastException != null)
+            {
+                _consecutiveFailures++;
+                ErrorOccurred?.Invoke(this, lastException);
+            }
+        }
+        catch (Exception ex)
+        {
+            DebugWriter.WriteLine($"✗ Unexpected error in SendBeaconAsync: {ex.Message}");
+            DebugWriter.WriteLine($"Stack trace: {ex.StackTrace}");
+            ErrorOccurred?.Invoke(this, ex);
+            StatusChanged?.Invoke(this, $"Error: {ex.Message}");
+        }
+    }
+
+    private void RecreateHttpClient()
+    {
+        _httpClient?.Dispose();
+        _httpClient = new HttpClient();
+        _httpClient.Timeout = TimeSpan.FromSeconds(15);
+        DebugWriter.WriteLine("✓ HttpClient recreated");
+    }
+
+#if __ANDROID__
+    private void AcquireWakeLockForSend()
+    {
+        try
+        {
+            var context = Android.App.Application.Context;
+            var powerManager = context.GetSystemService(Android.Content.Context.PowerService) as Android.OS.PowerManager;
+
+            if (powerManager != null && _wakeLock == null)
+            {
+                // Use PARTIAL wakelock with longer timeout for better Doze recovery
+                // ACQUIRE_CAUSES_WAKEUP flag ensures device wakes even in deep sleep
+                _wakeLock = powerManager.NewWakeLock(
+                    Android.OS.WakeLockFlags.Partial,
+                    "LocationBeacon::BeaconSendWakeLock");
+
+                // Increased timeout from 30s to 60s to handle slow network recovery in Doze
+                _wakeLock.Acquire(60000L);
+
+                DebugWriter.WriteLine("✓ Partial WakeLock acquired for send (60s timeout - Doze recovery)");
+            }
+        }
+        catch (Exception ex)
+        {
+            DebugWriter.WriteLine($"✗ Failed to acquire WakeLock: {ex.Message}");
+        }
+    }
+
+    private void ReleaseWakeLock()
+    {
+        try
+        {
+            if (_wakeLock != null && _wakeLock.IsHeld)
+            {
+                _wakeLock.Release();
+                _wakeLock = null;
+                DebugWriter.WriteLine("✓ Partial WakeLock released");
+            }
+        }
+        catch (Exception ex)
+        {
+            DebugWriter.WriteLine($"✗ Failed to release WakeLock: {ex.Message}");
+        }
+    }
+
+    private void StartForegroundService()
+    {
+        try
+        {
+            var context = Android.App.Application.Context;
+            var intent = new Android.Content.Intent(context, typeof(Platforms.Android.BeaconForegroundService));
+
+            if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
+            {
+                context.StartForegroundService(intent);
+            }
+            else
+            {
+                context.StartService(intent);
+            }
+            DebugWriter.WriteLine("✓ Foreground Service started");
+        }
+        catch (Exception ex)
+        {
+            DebugWriter.WriteLine($"✗ Failed to start Foreground Service: {ex.Message}");
+        }
+    }
+
+    private void StopForegroundService()
+    {
+        try
+        {
+            var context = Android.App.Application.Context;
+            var intent = new Android.Content.Intent(context, typeof(Platforms.Android.BeaconForegroundService));
+            context.StopService(intent);
+            DebugWriter.WriteLine("✓ Foreground Service stopped");
+        }
+        catch (Exception ex)
+        {
+            DebugWriter.WriteLine($"✗ Failed to stop Foreground Service: {ex.Message}");
+        }
+    }
+#endif
+
+    private ValidationResult ValidatePairingKey(string pairingKey)
+    {
+        if (string.IsNullOrWhiteSpace(pairingKey))
+            return ValidationResult.Failure("Pairing key not configured");
+
+        if (pairingKey.Length < MinPairingKeyLength)
+            return ValidationResult.Failure($"Pairing key too short (min {MinPairingKeyLength} chars)");
+
+        if (pairingKey.Length > MaxPairingKeyLength)
+            return ValidationResult.Failure($"Pairing key too long (max {MaxPairingKeyLength} chars)");
+
+        return ValidationResult.Success();
+    }
+
+    private ValidationResult ValidateCoordinates(double latitude, double longitude)
+    {
+        if (latitude < MinLatitude || latitude > MaxLatitude)
+            return ValidationResult.Failure($"Invalid latitude: {latitude} (must be between {MinLatitude} and {MaxLatitude})");
+
+        if (longitude < MinLongitude || longitude > MaxLongitude)
+            return ValidationResult.Failure($"Invalid longitude: {longitude} (must be between {MinLongitude} and {MaxLongitude})");
+
+        if (latitude == 0 && longitude == 0)
+            return ValidationResult.Failure("Could not obtain valid location");
+
+        return ValidationResult.Success();
+    }
+
+    private ValidationResult ValidateBatteryLevel(int battery)
+    {
+        if (battery < MinBatteryLevel || battery > MaxBatteryLevel)
+            return ValidationResult.Failure($"Invalid battery level: {battery}%");
+
+        return ValidationResult.Success();
+    }
+
+    private ValidationResult ValidateAccuracy(double accuracy)
+    {
+        if (accuracy < MinAccuracy)
+            return ValidationResult.Failure($"Invalid accuracy: {accuracy}m");
+
+        return ValidationResult.Success();
+    }
+
+    private ValidationResult ValidateTimestamp(DateTime recordedAt)
+    {
+        var now = DateTime.UtcNow;
+        var timeDiff = now - recordedAt;
+
+        if (timeDiff.TotalMinutes > MaxTimeOffsetPastMinutes)
+            return ValidationResult.Failure($"Timestamp too old: {timeDiff.TotalMinutes:F1} minutes ago");
+
+        if (timeDiff.TotalMinutes < -MaxTimeOffsetFutureMinutes)
+            return ValidationResult.Failure($"Timestamp in future: {-timeDiff.TotalMinutes:F1} minutes ahead");
+
+        return ValidationResult.Success();
+    }
+
+    private class ValidationResult
+    {
+        public bool IsValid { get; set; }
+        public string Message { get; set; } = string.Empty;
+
+        public static ValidationResult Success() => new() { IsValid = true };
+        public static ValidationResult Failure(string message) => new() { IsValid = false, Message = message };
+    }
+}

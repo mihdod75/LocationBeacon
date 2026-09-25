@@ -1,0 +1,62 @@
+﻿#if __ANDROID__
+using Android.Content;
+using Android.Content.PM;
+using AndroidX.Core.App;
+using Android.OS;
+
+namespace LocationBeacon.Platforms.Android;
+
+public class PermissionManager
+{
+    public static bool HasRequiredLocationPermissions(Context context)
+    {
+        if (Build.VERSION.SdkInt < BuildVersionCodes.M)
+            return true;
+
+        return ContextCompat.CheckSelfPermission(context, Android.Manifest.Permission.AccessFineLocation) == Permission.Granted
+            && ContextCompat.CheckSelfPermission(context, Android.Manifest.Permission.AccessCoarseLocation) == Permission.Granted;
+    }
+
+    public static bool HasForegroundServiceLocationPermission(Context context)
+    {
+        if (Build.VERSION.SdkInt < BuildVersionCodes.S) // Android 12
+            return true;
+
+        if (Build.VERSION.SdkInt >= BuildVersionCodes.Tiramisu) // Android 13+
+        {
+            return ContextCompat.CheckSelfPermission(context, Android.Manifest.Permission.ForegroundServiceLocation) == Permission.Granted;
+        }
+        return true;
+    }
+
+    public static string[] GetRequiredPermissions()
+    {
+        if (Build.VERSION.SdkInt >= BuildVersionCodes.Tiramisu) // Android 13+
+        {
+            return new[]
+            {
+                Android.Manifest.Permission.AccessFineLocation,
+                Android.Manifest.Permission.AccessCoarseLocation,
+                Android.Manifest.Permission.ForegroundServiceLocation
+            };
+        }
+        else if (Build.VERSION.SdkInt >= BuildVersionCodes.S) // Android 12
+        {
+            return new[]
+            {
+                Android.Manifest.Permission.AccessFineLocation,
+                Android.Manifest.Permission.AccessCoarseLocation,
+                Android.Manifest.Permission.ForegroundService
+            };
+        }
+        else
+        {
+            return new[]
+            {
+                Android.Manifest.Permission.AccessFineLocation,
+                Android.Manifest.Permission.AccessCoarseLocation
+            };
+        }
+    }
+}
+#endif

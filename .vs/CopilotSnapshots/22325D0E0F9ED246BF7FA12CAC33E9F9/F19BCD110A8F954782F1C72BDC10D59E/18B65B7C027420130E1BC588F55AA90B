@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="456" height="456" viewBox="0 0 456 456" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <!-- Gradient background from dark blue to lighter blue -->
+    <defs>
+        <linearGradient id="bgGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:#0f172a;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#1e3a8a;stop-opacity:1" />
+        </linearGradient>
+    </defs>
+    <rect x="0" y="0" width="456" height="456" fill="url(#bgGradient)" />
+
+    <!-- Main Beacon/Lighthouse Tower -->
+    <rect x="180" y="120" width="96" height="180" fill="#fbbf24" rx="6" />
+
+    <!-- Tower Stripes for visual interest -->
+    <rect x="180" y="120" width="96" height="16" fill="#f59e0b" />
+    <rect x="180" y="165" width="96" height="16" fill="#f59e0b" />
+    <rect x="180" y="210" width="96" height="16" fill="#f59e0b" />
+    <rect x="180" y="255" width="96" height="16" fill="#f59e0b" />
+
+    <!-- Beacon Light (top - glowing) -->
+    <circle cx="228" cy="105" r="30" fill="#fca5a5" opacity="0.4" />
+    <circle cx="228" cy="105" r="24" fill="#ef4444" />
+    <circle cx="228" cy="105" r="16" fill="#fca5a5" opacity="0.9" />
+    <circle cx="228" cy="105" r="8" fill="#fef2f2" />
+
+    <!-- Radio Waves (representing location beacon) -->
+    <circle cx="228" cy="210" r="55" fill="none" stroke="#60a5fa" stroke-width="3" opacity="0.7" />
+    <circle cx="228" cy="210" r="80" fill="none" stroke="#60a5fa" stroke-width="2" opacity="0.5" />
+    <circle cx="228" cy="210" r="105" fill="none" stroke="#60a5fa" stroke-width="2" opacity="0.3" />
+
+    <!-- Tower Base -->
+    <rect x="170" y="300" width="116" height="24" fill="#78350f" rx="3" />
+    <polygon points="150,324 306,324 285,345 171,345" fill="#92400e" />
+
+    <!-- Text: "Location Beacon" -->
+    <text x="228" y="390" font-family="Arial, sans-serif" font-size="28" font-weight="bold" text-anchor="middle" fill="#ffffff">
+        Location Beacon
+    </text>
+</svg>
